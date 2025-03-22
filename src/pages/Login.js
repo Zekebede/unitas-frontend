@@ -1,7 +1,9 @@
 // src/pages/Login.js
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+
+const API_BASE = process.env.REACT_APP_API_BASE_URL || "https://unitas-backend-wt3p.onrender.com";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -9,31 +11,21 @@ function Login() {
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      navigate("/dashboard"); // Redirect if already logged in
-    }
-  }, [navigate]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/api/users/login", {
+      const res = await axios.post(`${API_BASE}/api/users/login`, {
         email,
         password,
       });
 
       localStorage.setItem("token", res.data.token);
-      localStorage.setItem("userRole", res.data.user.role); // Store role for later checks
-      setMessage("Login successful!");
+      localStorage.setItem("user", JSON.stringify(res.data.user));
 
-      // ✅ Redirect based on user role
-      if (res.data.user.role === "Admin") {
-        navigate("/admin-dashboard");
-      } else {
-        navigate("/dashboard");
-      }
+      setMessage("Login successful!");
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
     } catch (error) {
       setMessage("Login failed. Please try again.");
     }
