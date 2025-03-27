@@ -26,8 +26,8 @@ function Navbar() {
     { path: "/my-contributions", label: "My Contributions", protected: true },
     { path: "/bank-transfer", label: "Bank Transfer", protected: true },
     { path: "/admin-dashboard", label: "Admin Dashboard", protected: true, adminOnly: true },
-    { path: "/login", label: "Login", guestOnly: true },
-    { path: "/register", label: "Register", guestOnly: true },
+    { path: "/login", label: "Login (መግቢያ)", guestOnly: true },
+    { path: "/register", label: "Register (ምዝገባ)", guestOnly: true },
     { path: "/logout", label: "Logout", protected: true },
   ];
 
@@ -49,9 +49,9 @@ function Navbar() {
     <nav className="bg-blue-600 p-4 shadow-md fixed top-0 left-0 w-full z-50">
       <div className="container mx-auto flex justify-between items-center">
         <div className="flex items-center space-x-2">
-          <img src="/logo.png" alt="Logo" className="h-8 w-8" />
+          <img src="/logo.png" alt="Logo" className="h-18 w-28" />
           <h1 className="text-white text-2xl font-bold font-sans">
-            Project Unitas
+          አሌክሳንድሪያ ማዶ እድር
           </h1>
         </div>
 
