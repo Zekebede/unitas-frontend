@@ -51,7 +51,7 @@ function Navbar() {
         <div className="flex items-center space-x-2">
           <img src="/logo.png" alt="Logo" className="h-18 w-28" />
           <h1 className="text-white text-2xl font-bold font-sans">
-          አሌክሳንድሪያ ማዶ እድር
+          አሌክሳንድሪያ እድር
           </h1>
         </div>
 
