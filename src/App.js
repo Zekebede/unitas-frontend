@@ -30,6 +30,7 @@ function App() {
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/edit-profile" element={<EditProfile />} />
         <Route path="/bank-transfer" element={<BankTransfer />} />
+        <Route path="/edit-profile" element={<EditProfile />} />
 
       </Routes>
     </Router>

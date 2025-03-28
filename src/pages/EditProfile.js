@@ -4,7 +4,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function EditProfile() {
-  const [user, setUser] = useState({ name: "", email: "" });
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -12,22 +13,16 @@ function EditProfile() {
   useEffect(() => {
     const fetchProfile = async () => {
       const token = localStorage.getItem("token");
-      if (!token) {
-        setMessage("Unauthorized. Please login.");
-        setLoading(false);
-        return;
-      }
+      if (!token) return setMessage("Unauthorized access");
 
       try {
-        const res = await axios.get("http://localhost:5000/api/user/profile", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/user/profile`, {
+          headers: { Authorization: `Bearer ${token}` },
         });
 
-        setUser({ name: res.data.user.name, email: res.data.user.email });
+        setName(res.data.user.name);
+        setEmail(res.data.user.email);
       } catch (err) {
-        console.error("❌ Error loading profile:", err);
         setMessage("Failed to load profile.");
       } finally {
         setLoading(false);
@@ -37,72 +32,62 @@ function EditProfile() {
     fetchProfile();
   }, []);
 
-  const handleChange = (e) => {
-    setUser((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
-  const handleSubmit = async (e) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
+
     try {
-      const res = await axios.put("http://localhost:5000/api/user/update-profile", user, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setMessage(res.data.message || "Profile updated successfully.");
-      setTimeout(() => {
-        navigate("/profile");
-      }, 1500);
+      const res = await axios.put(
+        `${process.env.REACT_APP_API_BASE_URL}/api/user/profile`,
+        { name, email },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setMessage(res.data.message || "✅ Profile updated!");
+      setTimeout(() => navigate("/profile"), 1500);
     } catch (err) {
-      console.error("❌ Error updating profile:", err);
-      setMessage("Failed to update profile.");
+      setMessage("❌ Failed to update profile.");
     }
   };
 
   return (
     <div className="pt-24 flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-xl shadow-md max-w-lg w-full">
-        <h2 className="text-2xl font-bold mb-4 text-blue-700">Edit Profile</h2>
+      <div className="bg-white p-8 rounded-xl shadow-lg max-w-xl w-full">
+        <h2 className="text-3xl font-bold text-blue-600 mb-4">Edit Profile</h2>
+
+        {message && <p className="text-center text-red-600 mb-4">{message}</p>}
 
         {loading ? (
-          <p className="text-gray-600">Loading...</p>
+          <p>Loading...</p>
         ) : (
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label className="block text-gray-700">Name</label>
+          <form onSubmit={handleUpdate} className="space-y-4">
+            <div>
+              <label className="block text-gray-700 mb-1">Name</label>
               <input
                 type="text"
-                name="name"
-                value={user.name}
-                onChange={handleChange}
-                className="w-full border p-2 rounded mt-1"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full border border-gray-300 p-3 rounded-md"
                 required
               />
             </div>
-
-            <div className="mb-4">
-              <label className="block text-gray-700">Email</label>
+            <div>
+              <label className="block text-gray-700 mb-1">Email</label>
               <input
                 type="email"
-                name="email"
-                value={user.email}
-                onChange={handleChange}
-                className="w-full border p-2 rounded mt-1"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full border border-gray-300 p-3 rounded-md"
                 required
               />
             </div>
-
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+              className="w-full bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700"
             >
-              Save Changes
+              Update Profile
             </button>
           </form>
         )}
-
-        {message && <p className="mt-4 text-green-600">{message}</p>}
       </div>
     </div>
   );

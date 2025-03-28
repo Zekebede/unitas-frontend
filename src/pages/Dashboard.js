@@ -39,6 +39,12 @@ function Dashboard() {
     fetchTotal();
   }, []);
 
+  // ✅ Format as ETB currency
+  const formattedTotal = new Intl.NumberFormat("en-ET", {
+    style: "currency",
+    currency: "ETB",
+  }).format(total);
+
   return (
     <div className="pt-24 px-4 min-h-screen bg-gray-100 flex flex-col items-center">
       <div className="w-full max-w-4xl">
@@ -53,7 +59,7 @@ function Dashboard() {
             {/* Card 1: Total Contribution */}
             <div className="bg-white rounded-2xl shadow-lg p-6">
               <h3 className="text-xl font-semibold text-gray-700 mb-2">Total Contributions</h3>
-              <p className="text-5xl font-bold text-green-600">${total.toFixed(2)}</p>
+              <p className="text-5xl font-bold text-green-600">{formattedTotal}</p>
               <p className="text-sm text-gray-500 mt-2">Sum of all your contributions</p>
             </div>
 
